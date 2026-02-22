@@ -1,136 +1,125 @@
-# LangChainLLM
+# Repo 1 — LangChain LLM Chain with Groq
 
-Implementación de un **LLM Chain** con LangChain usando `llama-3.3-70b-versatile` a través de **Groq** (100% gratuito, sin tarjeta de crédito).  
-Basado en el tutorial oficial [LangChain LLM Chain Tutorial](https://python.langchain.com/docs/tutorials/llm_chain).
+Implementation of an **LLM Chain** with LangChain using `llama-3.3-70b-versatile` through **Groq** (100% free, no credit card required).  
+Based on the official [LangChain LLM Chain Tutorial](https://python.langchain.com/docs/tutorials/llm_chain).
 
 ---
 
-## ¿Por qué Groq?
+## Why Groq?
 
 | | Gemini free | OpenAI | Groq free |
 |---|---|---|---|
-| Requests/día | ~50 | De pago | 14,400 |
-| Requests/minuto | 2 | De pago | 30 |
-| Tarjeta requerida | No | Sí | No |
-| Velocidad | Media | Alta | ⚡ Muy alta |
+| Requests/day | ~50 | Paid | 14,400 |
+| Requests/minute | 2 | Paid | 30 |
+| Credit card required | No | Yes | No |
+| Speed | Medium | High | ⚡ Very high |
 
 ---
 
-## Arquitectura
+## Architecture
 
 ```
-Input del usuario (topic)
+User input (topic)
         │
         ▼
 ┌─────────────────────┐
-│  ChatPromptTemplate  │  ← Define el rol del asistente + variable {topic}
+│  ChatPromptTemplate  │  ← Sets assistant persona + {topic} variable
 └─────────────────────┘
         │
         ▼
 ┌──────────────────────────────┐
-│  ChatGroq                    │  ← llama-3.3-70b-versatile (gratis)
+│  ChatGroq                    │  ← llama-3.3-70b-versatile (free)
 │  (llama-3.3-70b-versatile)   │
 └──────────────────────────────┘
         │
         ▼
 ┌─────────────────────┐
-│   StrOutputParser    │  ← Convierte AIMessage a string plano
+│   StrOutputParser    │  ← Converts AIMessage to plain string
 └─────────────────────┘
         │
         ▼
-   Respuesta en texto
+   Text response
 ```
 
-### Componentes
+### Components
 
-| Componente | Rol |
+| Component | Role |
 |---|---|
-| `ChatPromptTemplate` | Estructura la conversación: persona del sistema + mensaje de usuario con `{topic}` |
-| `ChatGroq` | Llama a la API de Groq con el modelo LLaMA 3.3 70B |
-| `StrOutputParser` | Convierte el objeto `AIMessage` a un string de Python |
-| Pipe LCEL (`\|`) | Compone los tres componentes en una cadena ejecutable |
+| `ChatPromptTemplate` | Structures the conversation: system persona + user message with `{topic}` placeholder |
+| `ChatGroq` | Calls the Groq API with the LLaMA 3.3 70B model |
+| `StrOutputParser` | Converts the `AIMessage` object to a plain Python string |
+| LCEL pipe (`\|`) | Composes the three components into a single executable chain |
 
 ---
 
-## Requisitos previos
-
-- Python 3.10+
-- Una [Groq API key](https://console.groq.com) (gratis, sin tarjeta)
-
-### Cómo obtener la API key de Groq
-1. Ve a [console.groq.com](https://console.groq.com)
-2. Crea una cuenta con tu correo
-3. Ve a **API Keys** → **Create API Key**
-4. Copia la key — empieza con `gsk_...`
-
----
-
-## Instalación
+## Installation
 
 ```bash
-# 1. Clona el repositorio
-git clone https://github.com/<tu-usuario>/langchain-llm-chain.git
+# 1. Clone the repository
+git clone https://github.com/<your-username>/langchain-llm-chain.git
 cd langchain-llm-chain
 
-# 2. Crea y activa un entorno virtual
+# 2. Create and activate a virtual environment
 python -m venv venv
 source venv/bin/activate        # macOS / Linux
 venv\Scripts\activate           # Windows
 
-# 3. Instala las dependencias
+# 3. Install dependencies
 pip install -r requirements.txt
 
-# 4. Configura las variables de entorno
+# 4. Set up environment variables
 cp .env.example .env
-# Abre .env y pega tu Groq API key
+# Open .env and paste your Groq API key
 ```
 
 ---
 
-## Ejecución
+## Running the code
 
 ```bash
 python main.py
 ```
 
-### Output esperado
+### Expected output
 
 ```
-📌 Tema: Retrieval-Augmented Generation (RAG)
+📌 Topic: Retrieval-Augmented Generation (RAG)
 --------------------------------------------------
-RAG es una técnica que combina un sistema de recuperación de información con un
-modelo generativo de lenguaje para producir respuestas más precisas y
-contextualmente relevantes. En lugar de depender únicamente del conocimiento
-interno del modelo, RAG busca documentos relevantes en una base de conocimiento
-externa y los usa como contexto adicional para el generador...
+RAG is a technique that combines an information retrieval system with a
+generative language model to produce more accurate and contextually relevant
+responses. Instead of relying solely on the model's internal knowledge, RAG
+fetches relevant documents from an external knowledge base and uses them as
+additional context for the generator...
 
-📌 Tema: Bases de datos vectoriales y embeddings
+📌 Topic: Vector databases and embeddings
 --------------------------------------------------
 ...
 
-🌊 Ejemplo con streaming:
+🌊 Streaming example:
 --------------------------------------------------
-Los transformers revolucionaron el NLP al introducir el mecanismo de atención...
+Transformers revolutionized NLP by introducing an architecture that allows
+parallel processing of text sequences...
 ```
 
 ---
 
-## Conceptos clave
+## Key concepts
 
-**LCEL (LangChain Expression Language)** — el operador `|` compone runnables de izquierda a derecha. Cada componente implementa `.invoke()`, `.stream()` y `.batch()`.
+**LCEL (LangChain Expression Language)** — the `|` pipe operator composes runnables left-to-right, similar to Unix pipes. Each component implements `.invoke()`, `.stream()`, and `.batch()`.
 
-**Prompt templates** — separan la estructura del prompt de los valores variables, haciéndolos reutilizables y fáciles de versionar.
+**Prompt templates** — separate the prompt structure from variable values, making prompts reusable, testable, and easy to version-control.
 
-**Streaming** — `chain.stream()` devuelve tokens parciales a medida que llegan, útil para UIs responsivas.
+**Streaming** — `chain.stream()` yields partial tokens as they arrive from the API, enabling responsive UIs without waiting for the full response.
 
 ---
 
-## Estructura del proyecto
+## Project structure
 
 ```
 repo1/
-├── main.py           # Script principal con el LLM chain
-├── requirements.txt  # Dependencias de Python
-├── .env.example      # Plantilla de variables de entorno
-└── README.md         # Este archivo
+├── main.py           # Main script with the LLM chain
+├── requirements.txt  # Python dependencies
+├── .env.example      # Environment variable template
+├── .gitignore        # Files excluded from git
+└── README.md         # This file
 ```
