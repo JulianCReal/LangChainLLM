@@ -1,4 +1,4 @@
-#LangChainLLM
+# LangChainLLM
 
 Implementation of an **LLM Chain** with LangChain using `llama-3.3-70b-versatile` through **Groq** (100% free, no credit card required).  
 Based on the official [LangChain LLM Chain Tutorial](https://python.langchain.com/docs/tutorials/llm_chain).
