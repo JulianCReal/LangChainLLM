@@ -116,7 +116,7 @@ parallel processing of text sequences...
 ## Project structure
 
 ```
-repo1/
+LangChainLLM/
 ├── main.py           # Main script with the LLM chain
 ├── requirements.txt  # Python dependencies
 ├── .env.example      # Environment variable template
