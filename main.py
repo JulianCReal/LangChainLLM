@@ -11,30 +11,30 @@ from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
-# ── 1. Cargar variables de entorno ────────────────────────────────────────────
+# 1. Cargar variables de entorno
 load_dotenv()
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 if not GROQ_API_KEY:
     raise EnvironmentError("Falta GROQ_API_KEY en el archivo .env")
 
-# ── 2. Inicializar el modelo ──────────────────────────────────────────────────
+# 2. Inicializar el modelo
 model = ChatGroq(
     model="llama-3.3-70b-versatile",
     temperature=0.7,
     groq_api_key=GROQ_API_KEY,
 )
 
-# ── 3. Definir el prompt template ─────────────────────────────────────────────
+# 3. Definir el prompt template
 prompt = ChatPromptTemplate.from_messages([
     ("system", "You are a helpful assistant that explains technical topics clearly and concisely."),
     ("user",   "Explain the following topic in 3-4 sentences: {topic}"),
 ])
 
-# ── 4. Construir la cadena ────────────────────────────────────────────────────
+# 4. Construir la cadena
 chain = prompt | model | StrOutputParser()
 
-# ── 5. Función para hacer preguntas con streaming ─────────────────────────────
+# 5. Función para hacer preguntas con streaming
 def ask(topic: str) -> None:
     """Invoca la cadena con streaming e imprime la respuesta token a token."""
     print(f"\n📌 Topic: {topic}")
@@ -44,7 +44,7 @@ def ask(topic: str) -> None:
     print("\n")
 
 
-# ── 6. Modo interactivo ───────────────────────────────────────────────────────
+# 6. Modo interactivo
 def interactive_mode() -> None:
     """Loop que lee temas desde la terminal hasta que el usuario escribe 'exit'."""
     print("🤖 LangChain LLM Chain — Groq Edition")
@@ -68,7 +68,7 @@ def interactive_mode() -> None:
         ask(topic)
 
 
-# ── 7. Entry point ────────────────────────────────────────────────────────────
+# 7. Entry point
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         # Modo CLI: python main.py "your topic here"
